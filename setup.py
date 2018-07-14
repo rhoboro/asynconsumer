@@ -5,6 +5,8 @@ def main():
     setup(
         name='asynconsumer',
         version='0.0.1',
+        url='https://github.com/rhoboro/asynconsumer',
+        license='Apache License 2.0',
         author='rhoboro',
         author_email='rhoboro@gmail.com',
         maintainer='rhoboro',

@@ -2,11 +2,18 @@
 
 リストを受け取り、その各要素に並列で任意の処理を行うライブラリ
 
+## インストール
+
+```sh
+$ pip install asynconsumer
+```
+
 ## クイックスタート
 
 ### URLの一覧からHTTPリソースを取得する
 
 ```python
+$ pip install aiohttp
 $ python3 -q
 >>> from asynconsumer import fetch_http_resources
 >>> urls = ['https://avatars3.githubusercontent.com/u/13819005?s=460&v=4']
@@ -20,6 +27,7 @@ $ python3 -q
 ### GCSのURI一覧からオブジェクトを取得する
 
 ```python
+$ pip install google-cloud-storage
 $ python3 -q
 >>> from asynconsumer import fetch_gcs_object
 >>> uris = ['gs://...']
