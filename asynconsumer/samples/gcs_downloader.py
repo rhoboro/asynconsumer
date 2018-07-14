@@ -20,7 +20,7 @@ def fetch_gcs_objects(uris, directory, naming=None, concurrency=3, sleep=0):
     loop = asyncio.get_event_loop()
     naming = naming or to_md5
 
-    async def _fetch_image(uri):
+    async def _fetch(uri):
         local_path = directory + '/' + naming(uri)
         try:
             params = [client, uri, local_path]
@@ -29,7 +29,7 @@ def fetch_gcs_objects(uris, directory, naming=None, concurrency=3, sleep=0):
             filename = None
         return filename
 
-    return async_run(uris, _fetch_image, concurrency=concurrency, sleep=sleep)
+    return async_run(uris, _fetch, concurrency=concurrency, sleep=sleep)
 
 
 def _get_gcs_object(client, uri, filename):
