@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 def main():
     setup(
         name='asynconsumer',
-        version='0.0.1',
+        version='1.0.0',
         url='https://github.com/rhoboro/asynconsumer',
         license='Apache License 2.0',
         author='rhoboro',
