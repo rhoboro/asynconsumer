@@ -10,7 +10,40 @@ $ pip install asynconsumer
 
 ## クイックスタート
 
-### URLの一覧からHTTPリソースを取得する
+### 任意の処理を書く
+
+`async_run()`にリストとリストの要素を処理する任意のコルーチンを渡す。
+[asynconsumer/samples](./asynconsumer/samples)ディレクトリにサンプルを置いています。
+
+
+```python
+>>> from asynconsumer.core import async_run
+>>> import asyncio
+
+# リストの要素を引数に取るコルーチン関数を定義する
+>>> async def coro(target):
+...   print('start: {}'.format(target))
+...   await asyncio.sleep(1)
+...   print('end: {}'.format(target))
+...   # 戻り値のリストがasync_runの戻り値になる
+...   return target.upper()
+...
+>>> results = async_run(['ham', 'egg', 'spam'], coro, concurrency=2)
+start: ham
+start: egg
+end: ham
+end: egg
+start: spam
+end: spam
+>>>
+>>> results
+['HAM', 'EGG', 'SPAM']
+>>>
+```
+
+## サンプル実装例
+
+### [URLの一覧からHTTPリソースを取得する](./asynconsumer/samples/http_downloader.py)
 
 ```python
 $ pip install aiohttp
@@ -24,7 +57,7 @@ $ python3 -q
 ['./image_0.jpg']
 ```
 
-### GCSのURI一覧からオブジェクトを取得する
+### [GCSのURI一覧からオブジェクトを取得する](./asynconsumer/samples/gcs_downloader.py)
 
 ```python
 $ pip install google-cloud-storage
@@ -36,31 +69,4 @@ $ python3 -q
 >>>
 >>> fetch_http_resources(uris, '.', naming=lambda uri: 'image_{}.jpg'.format(uris.index(uri)))
 ['./image_0.jpg']
-```
-
-## 任意の処理を書く
-
-`async_run()`にリストとリストの要素を処理する任意のコルーチンを渡す。
-[asynconsumer/samples](./asynconsumer/samples)ディレクトリにサンプルを置いています。
-
-
-```python
->>> from asynconsumer.core import async_run
->>> import asyncio
->>> def nop(targets):
-...   async def coro(target):
-...     print('start: {}'.format(target))
-...     await asyncio.sleep(1)
-...     print('end: {}'.format(target))
-...     return target.upper()
-...   return async_run(targets, coro, concurrency=2)
-...
->>> nop(['ham', 'egg', 'spam'])
-start: ham
-start: egg
-end: ham
-end: egg
-start: spam
-end: spam
-['HAM', 'EGG', 'SPAM']
 ```
