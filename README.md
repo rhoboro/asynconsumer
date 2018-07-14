@@ -19,7 +19,6 @@ $ pip install asynconsumer
 ```python
 >>> from asynconsumer.core import async_run
 >>> import asyncio
-
 # リストの要素を引数に取るコルーチン関数を定義する
 >>> async def coro(target):
 ...   print('start: {}'.format(target))
@@ -28,6 +27,7 @@ $ pip install asynconsumer
 ...   # 戻り値のリストがasync_runの戻り値になる
 ...   return target.upper()
 ...
+# 並列数を指定して実行
 >>> results = async_run(['ham', 'egg', 'spam'], coro, concurrency=2)
 start: ham
 start: egg
