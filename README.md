@@ -62,9 +62,9 @@ $ python3 -q
 ```python
 $ pip install google-cloud-storage
 $ python3 -q
->>> from asynconsumer import fetch_gcs_object
+>>> from asynconsumer import fetch_gcs_objects
 >>> uris = ['gs://...']
->>> fetch_gcs_object(uris, '.')
+>>> fetch_gcs_objects(uris, '.')
 ['./md5string']
 >>>
 >>> fetch_http_resources(uris, '.', naming=lambda uri: 'image_{}.jpg'.format(uris.index(uri)))

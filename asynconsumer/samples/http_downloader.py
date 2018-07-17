@@ -1,8 +1,5 @@
 import logging
 
-import aiohttp
-import async_timeout
-
 from asynconsumer.core import async_run
 from . import to_md5
 
@@ -20,6 +17,9 @@ def fetch_http_resources(urls, directory, naming=None, timeout=10, concurrency=3
     :param sleep: スリープ時間（秒）。デフォルトは0.5。
     :return: 渡したurisと同潤のファイルパスの一覧。取得できない場合はファイルパスはNoneにする。
     """
+    import aiohttp
+    import async_timeout
+
     naming = naming or to_md5
 
     async def _fetch(url):
