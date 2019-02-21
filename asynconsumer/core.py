@@ -44,6 +44,16 @@ async def _run(targets,
     return responses
 
 
+def _to_coroutine(coro):
+    """関数をコルーチンに変換する"""
+    loop = asyncio.get_event_loop()
+
+    async def _coro(t):
+        return await loop.run_in_executor(None, coro, t)
+
+    return _coro
+
+
 def async_run(targets,
               coro,
               concurrency=1,
@@ -51,13 +61,17 @@ def async_run(targets,
     """リストに対して非同期処理を行う
 
     :param urls: 処理対象一覧
-    :param coro: 処理内容を記述したコルーチン
+    :param coro: リストの要素をただ1つ引数にとり、処理を行うコルーチンまたは関数。
     :param concurrency: 並列実行の最大数。デフォルトは1。
     :param sleep: スリープ時間（秒）。
     :return: coroの戻り値の一覧。順番は保持される。
     """
     targets = targets or []
     loop = asyncio.get_event_loop()
+
+    if not asyncio.iscoroutinefunction(coro):
+        coro = _to_coroutine(coro)
+
     results = loop.run_until_complete(_run(targets, coro, concurrency, sleep))
     return results
 
