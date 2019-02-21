@@ -10,6 +10,9 @@ $ pip install asynconsumer
 
 ## クイックスタート
 
+リストの要素を1つだけ引数にとるコルーチン関数または関数を定義し、`async_run()`に渡すと並列処理します。  
+並列処理数は`concurrency`で指定できます。
+
 ### 任意の処理を書く
 
 `async_run()`にリストとリストの要素を処理する任意のコルーチンを渡す。
@@ -19,7 +22,7 @@ $ pip install asynconsumer
 ```python
 >>> from asynconsumer.core import async_run
 >>> import asyncio
-# リストの要素を引数に取るコルーチン関数を定義する
+# リストの要素を1つ引数に取るコルーチン関数を定義する
 >>> async def coro(target):
 ...   print('start: {}'.format(target))
 ...   await asyncio.sleep(1)
@@ -35,7 +38,30 @@ end: ham
 end: egg
 start: spam
 end: spam
+>>> results
+['HAM', 'EGG', 'SPAM']
 >>>
+```
+
+コルーチン関数の代わりにただの関数でもOK。
+
+```python
+>>> from asynconsumer.core import async_run
+>>> import time
+# リストの要素を1つ引数に取る関数を定義する
+>>> def func(target):
+...   print('start: {}'.format(target))
+...   time.sleep(1)
+...   print('end: {}'.format(target))
+...   return target.upper()
+...
+>>> results = async_run(['ham', 'egg', 'spam'], func, concurrency=2)
+start: ham
+start: egg
+end: ham
+end: egg
+start: spam
+end: spam
 >>> results
 ['HAM', 'EGG', 'SPAM']
 >>>
