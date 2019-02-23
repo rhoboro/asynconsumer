@@ -1,34 +1,36 @@
 # asynconsumer
 
-asynconsumer is a simple library for processing each items within iterable using asyncio.
+リストを受け取り、その各要素に並列で任意の処理を行うライブラリ
 
-## How to install
+## インストール
 
 ```sh
-$ pip3 install asynconsumer
+$ pip install asynconsumer
 ```
 
-## Quick start
+## クイックスタート
 
-1. Define a function or a coroutine function which takes one argument.
-2. Now, call `async_run(iterable, function)` and you can get list which each items was applied with the function.  
-`concurrency` is an optional parameter can changes number of concurrently executed coroutines(default: 1).
+リストの要素を1つだけ引数にとるコルーチン関数または関数を定義し、`async_run()`に渡すと並列処理します。  
+並列処理数は`concurrency`で指定できます。
 
+### 任意の処理を書く
 
-### Examples
+`async_run()`にリストとリストの要素を処理する任意のコルーチンを渡す。
+[asynconsumer/samples](./asynconsumer/samples)ディレクトリにサンプルを置いています。
 
-`coro` in the following code is a coroutine function that convert a word passed as an argument to an upper case.  
-So, `async_run(['ham', 'egg', 'spam'], coro, concurrency=2)` will return `['HAM', 'EGG', 'SPAM']`.
 
 ```python
 >>> from asynconsumer.core import async_run
 >>> import asyncio
+# リストの要素を1つ引数に取るコルーチン関数を定義する
 >>> async def coro(target):
 ...   print('start: {}'.format(target))
 ...   await asyncio.sleep(1)
 ...   print('end: {}'.format(target))
+...   # 戻り値のリストがasync_runの戻り値になる
 ...   return target.upper()
 ...
+# 並列数を指定して実行
 >>> results = async_run(['ham', 'egg', 'spam'], coro, concurrency=2)
 start: ham
 start: egg
@@ -41,11 +43,12 @@ end: spam
 >>>
 ```
 
-You can also pass the normal functions.
+コルーチン関数の代わりにただの関数でもOK。
 
 ```python
 >>> from asynconsumer.core import async_run
 >>> import time
+# リストの要素を1つ引数に取る関数を定義する
 >>> def func(target):
 ...   print('start: {}'.format(target))
 ...   time.sleep(1)
@@ -64,14 +67,12 @@ end: spam
 >>>
 ```
 
-## More samples.
+## サンプル実装例
 
-Sample codes are put in [asynconsumer/samples](./asynconsumer/samples).
-
-### [Concurrent get HTTP resources](./asynconsumer/samples/http_downloader.py)
+### [URLの一覧からHTTPリソースを取得する](./asynconsumer/samples/http_downloader.py)
 
 ```python
-$ pip3 install aiohttp
+$ pip install aiohttp
 $ python3 -q
 >>> from asynconsumer import fetch_http_resources
 >>> urls = ['https://avatars3.githubusercontent.com/u/13819005?s=460&v=4']
@@ -82,10 +83,10 @@ $ python3 -q
 ['./image_0.jpg']
 ```
 
-### [Concurrent get GCS objects](./asynconsumer/samples/gcs_downloader.py)
+### [GCSのURI一覧からオブジェクトを取得する](./asynconsumer/samples/gcs_downloader.py)
 
 ```python
-$ pip3 install google-cloud-storage
+$ pip install google-cloud-storage
 $ python3 -q
 >>> from asynconsumer import fetch_gcs_objects
 >>> uris = ['gs://...']
@@ -95,4 +96,3 @@ $ python3 -q
 >>> fetch_http_resources(uris, '.', naming=lambda uri: 'image_{}.jpg'.format(uris.index(uri)))
 ['./image_0.jpg']
 ```
-
